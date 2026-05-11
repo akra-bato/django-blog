@@ -79,11 +79,25 @@ class PasswordResetConfirmView(GenericAPIView):
     serializer_class = PasswordResetConfirmSerializer
     permission_classes = (AllowAny,)
 
-    def post(self, request):
+    def post(self, request, token):
         logger.info("Password reset confirm request received")
         logger.info(f"Request data: {request.data}")
+        logger.info(f"Token from URL: {token}")
 
-        serializer = self.get_serializer(data=request.data)
+        uid = request.GET.get('uid')
+        if not uid:
+            uid = request.data.get('uid')
+
+        logger.info(f"UID from GET: {uid}")
+
+        data = {
+            'uid': uid,
+            'token': token,
+            'password_1': request.data.get('password_1'),
+            'password_2': request.data.get('password_2'),
+        }
+
+        serializer = self.get_serializer(data=data)
 
         if serializer.is_valid():
             logger.info("Serializer is valid, saving...")

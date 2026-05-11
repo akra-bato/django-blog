@@ -2,7 +2,6 @@ import logging
 
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
-from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
@@ -109,8 +108,8 @@ class PasswordResetSerializer(serializers.Serializer):
         )
 
 class PasswordResetConfirmSerializer(serializers.Serializer):
-    password_1 = serializers.CharField(min_length=8, max_length=64)
-    password_2 = serializers.CharField(min_length=8, max_length=64)
+    password_1 = serializers.CharField(min_length=8, max_length=64, write_only=True)
+    password_2 = serializers.CharField(min_length=8, max_length=64, write_only=True)
     uid = serializers.CharField()
     token = serializers.CharField()
 
